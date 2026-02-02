@@ -246,7 +246,7 @@ export default function ThankYou({ onLogout }) {
                                 animate={{ opacity: 1, y: 0 }}
                                 style={{ width: '100%' }}
                             >
-                                <AntiqueChat currentUser="Ayesha" />
+                                <AntiqueChat />
                             </motion.div>
                         )}
                     </AnimatePresence>
