@@ -4,13 +4,38 @@ import { motion } from 'framer-motion'
 export default function Decision({ onYes, onNo }) {
     const [noCount, setNoCount] = useState(0)
     const [noPos, setNoPos] = useState({ x: 0, y: 0 })
+    const [noText, setNoText] = useState('NO ❌')
+    const [yesScale, setYesScale] = useState(1)
+
+    const noTexts = [
+        'Are you sure?',
+        'Think again!',
+        'Last chance!',
+        'Really?',
+        'Don\'t do this!',
+        'I will cry 😢',
+        'Please? 🥺',
+        'Wrong button!',
+        'Missed me!',
+        'Try the other one!',
+        'Nice try!',
+        'Nope!',
+        'Not this one!'
+    ]
 
     const moveNoButton = () => {
         // Move it slightly to make it "shy"
-        const x = Math.random() * 150 - 75
-        const y = Math.random() * 150 - 75
+        const x = Math.random() * 200 - 100
+        const y = Math.random() * 200 - 100
         setNoPos({ x, y })
         setNoCount(prev => prev + 1)
+
+        // Change text randomly
+        const randomIndex = Math.floor(Math.random() * noTexts.length)
+        setNoText(noTexts[randomIndex])
+
+        // Make YES bigger
+        setYesScale(prev => Math.min(prev + 0.1, 2.5)) // Cap at 2.5x
     }
 
     const handleNoClick = () => {
@@ -49,10 +74,11 @@ export default function Decision({ onYes, onNo }) {
                 <div className="heart">❣️</div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '40px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '30px', marginTop: '40px', minHeight: '100px' }}>
                 <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: yesScale * 1.1 }}
+                    whileTap={{ scale: yesScale * 0.9 }}
+                    animate={{ scale: yesScale }}
                     onClick={onYes}
                     style={{
                         padding: '15px 40px',
@@ -60,7 +86,10 @@ export default function Decision({ onYes, onNo }) {
                         background: 'var(--primary)',
                         color: 'white',
                         borderRadius: '50px',
-                        boxShadow: '0 5px 15px rgba(255, 107, 129, 0.4)'
+                        boxShadow: '0 5px 15px rgba(255, 107, 129, 0.4)',
+                        border: 'none',
+                        cursor: 'pointer',
+                        zIndex: 10
                     }}
                 >
                     YES ✅
@@ -68,7 +97,7 @@ export default function Decision({ onYes, onNo }) {
 
                 <motion.button
                     animate={noPos}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                     onMouseEnter={moveNoButton}
                     onClick={handleNoClick}
                     style={{
@@ -76,10 +105,12 @@ export default function Decision({ onYes, onNo }) {
                         fontSize: '1.2rem',
                         background: '#e0e0e0',
                         color: '#666',
-                        borderRadius: '50px'
+                        borderRadius: '50px',
+                        border: 'none',
+                        position: 'relative'
                     }}
                 >
-                    NO ❌
+                    {noText}
                 </motion.button>
             </div>
 

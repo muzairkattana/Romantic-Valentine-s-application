@@ -36,10 +36,23 @@ export default function Valentine({ onComplete }) {
         }
     }, [onComplete])
 
+    const handlePageClick = (e) => {
+        const x = e.clientX / window.innerWidth
+        const y = e.clientY / window.innerHeight
+
+        confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { x, y },
+            colors: ['#ff6b81', '#ffccd5', '#a29bfe', '#ffffff']
+        })
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            onClick={handlePageClick}
             style={{
                 width: '100%',
                 height: '100vh',
@@ -48,9 +61,23 @@ export default function Valentine({ onComplete }) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 textAlign: 'center',
-                padding: '20px'
+                padding: '20px',
+                cursor: 'pointer',
+                position: 'relative'
             }}
         >
+            <div className="hearts-bg">
+                <div className="heart">❤️</div>
+                <div className="heart">💖</div>
+                <div className="heart">💝</div>
+                <div className="heart">💕</div>
+                <div className="heart">💗</div>
+                <div className="heart">💓</div>
+                <div className="heart">💞</div>
+                <div className="heart">💟</div>
+                <div className="heart">❣️</div>
+            </div>
+
             <motion.h1
                 initial={{ y: -50 }}
                 animate={{ y: 0 }}
@@ -58,7 +85,8 @@ export default function Valentine({ onComplete }) {
                     color: '#fff',
                     fontFamily: 'var(--font-fun)',
                     fontSize: '3rem',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                    zIndex: 10
                 }}
             >
                 Hypervisor, will you be my Valentine? 🥹❤️
@@ -78,7 +106,8 @@ export default function Valentine({ onComplete }) {
                     borderRadius: '20px',
                     overflow: 'hidden',
                     boxShadow: 'var(--shadow-hover)',
-                    border: '5px solid white'
+                    border: '5px solid white',
+                    zIndex: 10
                 }}
             >
                 <img
@@ -91,13 +120,14 @@ export default function Valentine({ onComplete }) {
             <motion.p
                 animate={{ y: [0, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 0.5 }}
-                style={{ color: 'white', marginTop: '30px', fontSize: '1.5rem', fontWeight: 'bold' }}
+                style={{ color: 'white', marginTop: '30px', fontSize: '1.5rem', fontWeight: 'bold', zIndex: 10 }}
             >
                 WOOOOOO! PARTYYYY! 🎉💃🕺
             </motion.p>
 
-            <p style={{ color: 'white', marginTop: '10px', opacity: 0.8, fontSize: '0.9rem' }}>
+            <p style={{ color: 'white', marginTop: '10px', opacity: 0.8, fontSize: '0.9rem', zIndex: 10 }}>
                 (Redirecting to the emotional part in 1 minute... enjoy the dance! 😂)
+                <br />Click anywhere for more confetti!
             </p>
         </motion.div>
     )

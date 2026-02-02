@@ -1,8 +1,18 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import confetti from 'canvas-confetti'
 
 export default function ThankYou({ onLogout }) {
     const [isOpen, setIsOpen] = useState(false)
+
+    const handleOpen = () => {
+        setIsOpen(true)
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        })
+    }
 
     return (
         <motion.div
@@ -24,8 +34,9 @@ export default function ThankYou({ onLogout }) {
                 <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
-                    onClick={() => setIsOpen(true)}
+                    whileHover={{ scale: 1.05, rotate: [0, -1, 1, -1, 1, 0] }}
+                    transition={{ rotate: { duration: 0.5, repeat: Infinity, repeatDelay: 1 } }}
+                    onClick={handleOpen}
                     style={{
                         cursor: 'pointer',
                         background: '#f4e7d1',
