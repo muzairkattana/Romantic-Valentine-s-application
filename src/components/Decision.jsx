@@ -50,15 +50,19 @@ export default function Decision({ onYes, onNo }) {
             className="card"
             style={{
                 background: 'rgba(255, 255, 255, 0.95)',
-                padding: '3rem',
+                padding: window.innerWidth < 768 ? '2rem 1rem' : '3rem',
                 borderRadius: '20px',
                 boxShadow: 'var(--shadow-card)',
                 textAlign: 'center',
                 maxWidth: '500px',
-                width: '90%'
+                width: '95%'
             }}
         >
-            <h1 style={{ color: 'var(--primary)', fontFamily: 'var(--font-fun)', fontSize: '2.5rem' }}>
+            <h1 style={{
+                color: 'var(--primary)',
+                fontFamily: 'var(--font-fun)',
+                fontSize: window.innerWidth < 768 ? '1.8rem' : '2.5rem'
+            }}>
                 Hypervisor has a very important question for you 🥹💌
             </h1>
 
@@ -74,7 +78,15 @@ export default function Decision({ onYes, onNo }) {
                 <div className="heart">❣️</div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '30px', marginTop: '40px', minHeight: '100px' }}>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: window.innerWidth < 768 ? '15px' : '30px',
+                marginTop: window.innerWidth < 768 ? '20px' : '40px',
+                minHeight: '100px',
+                flexDirection: window.innerWidth < 768 ? 'column' : 'row'
+            }}>
                 <motion.button
                     whileHover={{ scale: yesScale * 1.1 }}
                     whileTap={{ scale: yesScale * 0.9 }}

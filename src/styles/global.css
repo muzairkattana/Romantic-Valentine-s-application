@@ -252,3 +252,40 @@ button:hover::after {
   animation-duration: 15s;
   animation-delay: 2s;
 }
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  :root {
+    --shadow-card: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  body {
+    padding: 10px;
+  }
+
+  .app-container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.8rem !important;
+  }
+
+  h2 {
+    font-size: 1.4rem !important;
+  }
+
+  p {
+    font-size: 1rem !important;
+  }
+
+  .heart {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem !important;
+  }
+}

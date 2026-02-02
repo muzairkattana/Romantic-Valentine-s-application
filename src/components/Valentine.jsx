@@ -108,7 +108,7 @@ export default function Valentine({ onComplete }) {
                 transition={{ delay: 0.5, duration: 1, type: 'spring' }}
                 style={{
                     marginTop: '20px',
-                    maxWidth: '600px',
+                    maxWidth: window.innerWidth < 768 ? '90%' : '600px',
                     width: '100%',
                     borderRadius: '20px',
                     overflow: 'hidden',

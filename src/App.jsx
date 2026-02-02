@@ -71,7 +71,7 @@ function App() {
     return (
         <div className="app-container">
             <CursorTrail />
-            <MusicPlayer />
+            {/* <MusicPlayer /> */}
             <AnimatePresence mode="wait">
                 {renderPage()}
             </AnimatePresence>

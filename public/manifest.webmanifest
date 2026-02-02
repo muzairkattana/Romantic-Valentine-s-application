@@ -1,0 +1,23 @@
+{
+    "name": "For Ayesha",
+    "short_name": "Ayesha",
+    "description": "A special Valentine's surprise for Ayesha.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffccd5",
+    "theme_color": "#ff6b81",
+    "icons": [
+        {
+            "src": "/smile.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/smile.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

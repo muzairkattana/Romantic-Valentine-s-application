@@ -38,7 +38,7 @@ export default function Login({ onLogin }) {
                 transition={{ duration: 0.6, type: 'spring' }}
                 style={{
                     background: 'rgba(255, 255, 255, 0.95)',
-                    padding: '3rem',
+                    padding: window.innerWidth < 768 ? '2rem 1.5rem' : '3rem',
                     borderRadius: '30px',
                     boxShadow: 'var(--shadow-hover)',
                     textAlign: 'center',
