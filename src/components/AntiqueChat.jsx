@@ -124,6 +124,25 @@ export default function AntiqueChat() {
         downloadAnchorNode.remove();
     }
 
+    const handleUnsealScroll = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const imported = JSON.parse(event.target.result);
+                // Merge and remove duplicates by ID
+                const merged = [...messages, ...imported];
+                const unique = merged.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+                setMessages(unique.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)));
+                alert("The scroll has been successfully unsealed! 📜✒️");
+            } catch (err) {
+                alert("This scroll seems corrupted or invalid. 🥀");
+            }
+        };
+        reader.readAsText(file);
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -231,9 +250,28 @@ export default function AntiqueChat() {
                     )}
                 </div>
                 <div style={{ display: 'flex', gap: '15px' }}>
+                    <label
+                        title="Unseal (Import) shared scroll"
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            fontSize: '1.2rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}
+                    >
+                        📂
+                        <input
+                            type="file"
+                            accept=".json"
+                            onChange={handleUnsealScroll}
+                            style={{ display: 'none' }}
+                        />
+                    </label>
                     <button
                         onClick={handleSealForTravel}
-                        title="Export for Bluetooth/Sharing"
+                        title="Seal (Export) for Bluetooth/Sharing"
                         style={{
                             background: 'transparent',
                             border: 'none',
