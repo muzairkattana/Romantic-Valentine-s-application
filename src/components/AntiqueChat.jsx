@@ -8,7 +8,19 @@ export default function AntiqueChat() {
     const [loading, setLoading] = useState(true)
     const [chatName, setChatName] = useState('')
     const [showRegistry, setShowRegistry] = useState(true)
+    const [isOnline, setIsOnline] = useState(navigator.onLine)
     const chatEndRef = useRef(null)
+
+    // Detect connectivity
+    useEffect(() => {
+        const handleStatusChange = () => setIsOnline(navigator.onLine)
+        window.addEventListener('online', handleStatusChange)
+        window.addEventListener('offline', handleStatusChange)
+        return () => {
+            window.removeEventListener('online', handleStatusChange)
+            window.removeEventListener('offline', handleStatusChange)
+        }
+    }, [])
 
     // Load name and cache from local storage initially
     useEffect(() => {
@@ -25,7 +37,9 @@ export default function AntiqueChat() {
         fetchMessages()
 
         // Polling as a fallback for Realtime since we aren't using the full SDK
-        const interval = setInterval(fetchMessages, 3000)
+        const interval = setInterval(() => {
+            if (navigator.onLine) fetchMessages()
+        }, 3000)
         return () => clearInterval(interval)
     }, [])
 
@@ -37,10 +51,16 @@ export default function AntiqueChat() {
     const fetchMessages = async () => {
         try {
             const data = await supabaseFetch.getMessages()
-            setMessages(data)
+            // Merge with local offline queue for display
+            const queue = JSON.parse(localStorage.getItem('antique_chat_queue') || '[]')
+            setMessages([...data, ...queue])
             setLoading(false)
         } catch (err) {
             console.error(err)
+            // If offline, still show what we have in cache + queue
+            const savedCache = JSON.parse(localStorage.getItem('antique_chat_cache') || '[]')
+            const queue = JSON.parse(localStorage.getItem('antique_chat_queue') || '[]')
+            setMessages([...savedCache, ...queue])
         }
     }
 
@@ -88,9 +108,20 @@ export default function AntiqueChat() {
     const handleClearForMe = () => {
         setMessages([])
         localStorage.removeItem('antique_chat_cache')
+        localStorage.removeItem('antique_chat_queue')
         localStorage.removeItem('antique_chat_name') // Allow re-signing for fresh start
         setChatName('')
         setShowRegistry(true)
+    }
+
+    const handleSealForTravel = () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", `antique_scroll_${chatName}.json`);
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     }
 
     return (
@@ -185,26 +216,47 @@ export default function AntiqueChat() {
             {/* Ornate Header */}
             <div style={{
                 padding: '15px 25px',
-                background: 'rgba(139, 69, 19, 0.08)',
+                background: isOnline ? 'rgba(139, 69, 19, 0.08)' : 'rgba(121, 85, 72, 0.2)',
                 borderBottom: '2px solid rgba(139, 69, 19, 0.2)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>
-                <span style={{ fontSize: '1.4rem', color: '#5d2e0a', fontFamily: 'var(--font-antique)' }}>📜 {chatName || 'The Scroll'}</span>
-                <button
-                    onClick={handleClearForMe}
-                    style={{
-                        background: 'transparent',
-                        color: '#a1887f',
-                        fontSize: '0.8rem',
-                        textDecoration: 'none',
-                        cursor: 'pointer',
-                        fontStyle: 'italic'
-                    }}
-                >
-                    Re-Sign Registry
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '1.4rem', color: '#5d2e0a', fontFamily: 'var(--font-antique)' }}>
+                        📜 {chatName || 'The Scroll'}
+                    </span>
+                    {!isOnline && (
+                        <span style={{ fontSize: '0.7rem', color: '#d32f2f', fontWeight: 'bold' }}>📡 Offline - Saved to Quill</span>
+                    )}
+                </div>
+                <div style={{ display: 'flex', gap: '15px' }}>
+                    <button
+                        onClick={handleSealForTravel}
+                        title="Export for Bluetooth/Sharing"
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            fontSize: '1.2rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        📦
+                    </button>
+                    <button
+                        onClick={handleClearForMe}
+                        style={{
+                            background: 'transparent',
+                            color: '#a1887f',
+                            fontSize: '0.8rem',
+                            textDecoration: 'none',
+                            cursor: 'pointer',
+                            fontStyle: 'italic'
+                        }}
+                    >
+                        Re-Sign
+                    </button>
+                </div>
             </div>
 
             {/* Chat Area */}
@@ -261,9 +313,12 @@ export default function AntiqueChat() {
                                     fontSize: '1.3rem',
                                     lineHeight: '1.2',
                                     display: 'block',
+                                    opacity: msg.is_offline ? 0.6 : 1,
+                                    fontStyle: msg.is_offline ? 'italic' : 'normal',
                                     borderBottom: msg.sender === chatName ? '1px solid rgba(211, 47, 47, 0.2)' : '1px solid rgba(139, 69, 19, 0.2)'
                                 }}>
                                     {msg.content}
+                                    {msg.is_offline && <span style={{ fontSize: '0.6rem', marginLeft: '5px' }}>⏳</span>}
                                 </span>
 
                                 {msg.sender === chatName && (
