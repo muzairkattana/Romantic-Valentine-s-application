@@ -2,77 +2,10 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 export default function Decision({ onYes, onNo }) {
-    const [noCount, setNoCount] = useState(0)
-    const [noPos, setNoPos] = useState({ x: 0, y: 0 })
-    const [noText, setNoText] = useState('NO ❌')
-    const [yesScale, setYesScale] = useState(1)
-
-    const noTexts = [
-        'Are you sure?',
-        'Think again!',
-        'Last chance!',
-        'Really?',
-        'Don\'t do this!',
-        'I will cry 😢',
-        'Please? 🥺',
-        'Wrong button!',
-        'Missed me!',
-        'Try the other one!',
-        'Nice try!',
-        'Nope!',
-        'Not this one!',
-        'You can\'t catch me! 😜',
-        'Too slow! ⚡',
-        'Nice attempt! 😂',
-        'Keep trying! 🏃‍♀️',
-        'Almost there! (not really) 🤪',
-        'Your mouse is broken! 🖱️',
-        'I\'m invincible! 💪',
-        'Give up yet? 😏',
-        'This is fun! 🎮',
-        'You\'ll never get me! 🏃',
-        'Touch me if you can! 👆',
-        'I\'m like a ghost! 👻',
-        'Nope! Not today! 🙅‍♀️',
-        'Try harder! 💪',
-        'I\'m everywhere! 🌍',
-        'Catch me if you can! 🏃‍♀️',
-        'You\'re getting warmer! (cold actually) 🧊'
-    ]
-
-    const moveNoButton = (e) => {
-        e.preventDefault()
-        
-        // Get container dimensions instead of viewport
-        const containerWidth = Math.min(window.innerWidth - 100, 800) // Max 800px, min viewport-100px
-        const containerHeight = Math.min(window.innerHeight - 200, 600) // Max 600px, min viewport-200px
-        const buttonWidth = 120
-        const buttonHeight = 50
-        
-        // Calculate safe zones within container
-        const maxX = (containerWidth / 2) - buttonWidth - 20
-        const maxY = (containerHeight / 2) - buttonHeight - 20
-        const minX = -(containerWidth / 2) + buttonWidth + 20
-        const minY = -(containerHeight / 2) + buttonHeight + 20
-        
-        // Generate random position within safe zones
-        const randomX = Math.random() * (maxX - minX) + minX
-        const randomY = Math.random() * (maxY - minY) + minY
-        
-        // Move button to random position
-        setNoPos({ x: randomX, y: randomY })
-        setNoCount(prev => prev + 1)
-
-        // Change text randomly
-        const randomIndex = Math.floor(Math.random() * noTexts.length)
-        setNoText(noTexts[randomIndex])
-
-        // Make YES bigger
-        setYesScale(prev => Math.min(prev + 0.05, 3)) // Cap at 3x
-    }
+    const [noText] = useState('NO ❌')
+    const [yesScale] = useState(1)
 
     const handleNoClick = () => {
-        // If somehow clicked
         onNo()
     }
 
@@ -241,9 +174,8 @@ export default function Decision({ onYes, onNo }) {
                 margin: '0 auto'
             }}>
                 <motion.button
-                    whileHover={{ scale: yesScale * 1.1 }}
-                    whileTap={{ scale: yesScale * 0.9 }}
-                    animate={{ scale: yesScale }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={onYes}
                     style={{
                         padding: window.innerWidth < 480 ? '12px 25px' : '15px 40px',
@@ -265,14 +197,9 @@ export default function Decision({ onYes, onNo }) {
                 </motion.button>
 
                 <motion.button
-                    animate={noPos}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    onMouseEnter={moveNoButton}
-                    onTouchStart={moveNoButton}
-                    onClick={(e) => {
-                        e.preventDefault()
-                        moveNoButton(e)
-                    }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleNoClick}
                     style={{
                         padding: window.innerWidth < 480 ? '12px 25px' : '15px 40px',
                         fontSize: window.innerWidth < 480 ? '1rem' : '1.2rem',
@@ -280,12 +207,7 @@ export default function Decision({ onYes, onNo }) {
                         color: '#666',
                         borderRadius: '50px',
                         border: 'none',
-                        position: 'relative',
-                        cursor: 'not-allowed',
-                        userSelect: 'none',
-                        WebkitUserSelect: 'none',
-                        MozUserSelect: 'none',
-                        msUserSelect: 'none',
+                        cursor: 'pointer',
                         minWidth: window.innerWidth < 480 ? '120px' : '140px',
                         fontFamily: 'var(--font-fun)',
                         fontWeight: 'bold',
@@ -296,9 +218,6 @@ export default function Decision({ onYes, onNo }) {
                     {noText}
                 </motion.button>
             </div>
-
-            {noCount > 5 && <p style={{ marginTop: '20px', fontSize: '0.9rem', color: '#999', fontStyle: 'italic' }}>Why are you trying to click No? Just say YES already! 😢</p>}
-
         </motion.div>
     )
 }
