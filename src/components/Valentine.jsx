@@ -96,7 +96,7 @@ export default function Valentine({ onComplete }) {
                     zIndex: 10
                 }}
             >
-                Hypervisor, will you be my Valentine? 🥹❤️
+                Thanks for being my bestie 🥹❤️
             </motion.h1>
 
             <motion.div
